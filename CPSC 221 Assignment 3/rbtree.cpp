@@ -8,6 +8,31 @@
 
 #ifdef _RBTREE_H_
 
+// default constructor
+template <typename T>
+RBTree<T>::RBTree() {
+    root = NULL;
+    size = 0;
+}
+
+// copy constructor, performs deep copy of parameter
+template <typename T>
+RBTree<T>::RBTree(const RBTree<T>& rbtree){
+    //TO-DO
+}
+
+// destructor
+template <typename T>
+RBTree<T>::~RBTree(){
+    //TO-DO
+}
+
+// overloaded assignment operator
+template <typename T>
+RBTree<T>::RBTree<T>& operator=(const RBTree<T>& rbtree){
+    //TO-DO
+}
+
 // recursive helper function for deep copy
 // creates a new node based on sourcenode's contents, links back to parentnode,
 //   and recurses to create left and right children
