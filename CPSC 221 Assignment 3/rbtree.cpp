@@ -29,8 +29,8 @@ RBTree<T>::~RBTree(){
 
 // overloaded assignment operator
 template <typename T>
-RBTree<T>::RBTree<T>& operator=(const RBTree<T>& rbtree){
-    //TO-DO
+RBTree<T>& RBTree<T>::operator=(const RBTree<T>& rbtree){
+    return *this;
 }
 
 // recursive helper function for deep copy
