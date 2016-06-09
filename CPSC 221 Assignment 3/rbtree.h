@@ -7,6 +7,7 @@
 #ifndef _RBTREE_H_
 #define _RBTREE_H_
 
+#include "rbtreeprivate.h"
 #include <string>
 using namespace std;
 
