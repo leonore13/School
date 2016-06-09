@@ -18,7 +18,9 @@ RBTree<T>::RBTree() {
 // copy constructor, performs deep copy of parameter
 template <typename T>
 RBTree<T>::RBTree(const RBTree<T>& rbtree){
-    //TO-DO
+    root = NULL;
+    size = 0;
+    //still to do..
 }
 
 // destructor
@@ -44,7 +46,20 @@ Node<T>* RBTree<T>::CopyTree(Node<T>* sourcenode, Node<T>* parentnode) {
 // deletes all nodes in the tree. Calls recursive helper function.
 template <typename T>
 void RBTree<T>::RemoveAll() {
-    //TO-DO
+    RemoveAll(root);
+}
+
+// recursive helper function for tree deletion
+// deallocates nodes in post-order
+template <typename T>
+void RBTree<T>::RemoveAll(Node<T>* node){
+    if(node != NULL){
+        RemoveAll(node->left);
+        RemoveAll(node->right);
+        delete node;
+        node = NULL;
+        size--;
+    }
 }
 
 // Tree fix, performed after removal of a black node
@@ -65,9 +80,79 @@ int RBTree<T>::ComputeHeight(Node<T>* node) const {
 // If item already exists, do not insert and return false.
 // Otherwise, insert, increment size, and return true.
 template <typename T>
-bool RBTree<T>::Insert(T item) {
-    //TO-DO
-    return false;
+bool RBTree<T>::Insert(T item){
+    if(Contains(item)){
+        return false;
+    }
+    else{
+        BSTInsert(item);
+        Node<T>* newItem = Find(item);
+        newItem->is_black = false;
+        while(newItem != root && newItem->p->is_black == false){
+            if(newItem->p->p!= NULL && newItem->p == newItem->p->p->left){
+                Node<T> * uncle = newItem->p->p->right;
+                if(uncle !=NULL && uncle->is_black == false){
+                    newItem->p->is_black = true;
+                    uncle->is_black = true;
+                    newItem->p->p->is_black = false;
+                    newItem = newItem->p->p;
+                }
+                else{
+                    if(newItem == newItem->p->right){
+                        newItem = newItem->p;
+                        RotateLeft(newItem);
+                        newItem->p->is_black = false;
+                        RotateRight(newItem->p->p);
+                    }
+                    else{
+                        if(newItem == newItem->p->left){
+                            newItem->p->is_black = false;
+                            RotateRight(newItem->p->p);
+                        }
+                    }
+                }
+                
+            }
+            else{
+                if(newItem->p->p != NULL && newItem->p == newItem->p->p->right){
+                    Node<T>* uncleLeft = newItem->p->p->left;
+                    if(uncleLeft != NULL && uncleLeft->is_black == false){
+                        newItem->p->is_black = true;
+                        uncleLeft->is_black = true;
+                        newItem->p->p->is_black = false;
+                        newItem = newItem->p->p;
+                    }
+                    // if (uncleLeft == NULL){
+                    // newItem->p->is_black = true;
+                    // newItem->p->p->is_black = false;
+                    // RotateLeft(newItem->p->p);
+                    //
+                    //}
+                    else{
+                        if(newItem == newItem->p->left){
+                            newItem = newItem->p;
+                            RotateRight(newItem);
+                            newItem->p->is_black = true;
+                            newItem->p->p->is_black = false;
+                            RotateLeft(newItem->p->p);
+                        }
+                        else{
+                            if(newItem == newItem->p->right){
+                                newItem->p->is_black = true;
+                                newItem->p->p->is_black = false;
+                                RotateLeft(newItem->p->p);
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }
+        root->is_black = true;
+        size++;
+        return true;
+    }
+    
 }
 
 // Removal of an item from the tree.
@@ -81,18 +166,28 @@ bool RBTree<T>::Remove(T item) {
 // returns the number of items in the tree
 template <typename T>
 int RBTree<T>::Size() const {
-    //TO-DO
-    return 0;
+    return size;
 }
 
 // returns the height of the tree, from root to deepest null child. Calls recursive helper function.
 // Note that an empty tree should have a height of 0, and a tree with only one node will have a height of 1.
 
 template <typename T>
-int RBTree<T>::Height() const {
-    //TO-DO
-    return 0;
+int RBTree<T>::Height() const{
+    return HeightHelper(root);
 }
+
+template <typename T>
+int HeightHelper (Node<T>* root){
+    if(root == NULL){
+        return -1;
+    }
+    else {
+        return 1 + std::max (HeightHelper(root->left), HeightHelper(root->right));
+    }
+}
+
+
 
 
 #endif

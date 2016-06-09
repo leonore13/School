@@ -8,6 +8,9 @@
 //              pre-order traversal.
 
 #include <iostream>
+#include <iterator>
+#include <algorithm>
+#include <vector>
 #include <cstdlib>
 #include <string>
 
@@ -24,6 +27,7 @@ void RBTreeTest();
 // program entry point
 int main()
 {
+    
   RBTreeTest();
 
   int choice = 0;
@@ -144,6 +148,13 @@ void PrintMenu()
   cout << "Enter your choice: ";
 }
 
+// A helper function to print out the tree
+void PrintTree(int* array) {
+    for (int i = 0; i<sizeof(array); i++)
+        std::cout << array[i] << ", ";
+    std::cout << endl;
+}
+
 void RBTreeTest()
 {
   RBTree<int> tree1;
@@ -154,14 +165,26 @@ void RBTreeTest()
   tree1.Insert(4);
   tree1.Remove(4);
   
-  cout << "Tree contains " << tree1.Size() << " entries." << endl;
-  cout << "Tree height: " << tree1.Height() << endl;
+// Let's try printing out the preordered tree...
+int tree1Size = tree1.Size();
+PrintTree(tree1.DumpPreOrder(tree1Size));
 
-  RBTree<int> tree2(tree1);
+    
+cout << "Tree contains " << tree1.Size() << " entries." << endl;
+cout << "Tree height: " << tree1.Height() << endl;
 
-  tree1.RemoveAll();
+// This creates a copy of tree1 called tree2
+RBTree<int> tree2(tree1);
 
-  RBTree<int> tree3;
-  tree3.Insert(5);
-  tree3 = tree2;
+tree1.RemoveAll();
+    
+// Print out info once tree1 is cleared out
+cout << "Tree contains " << tree1.Size() << " entries." << endl;
+// For some reason, height doesn't work at this point, so i'm commenting it out
+// cout << "Tree height: " << tree1.Height() << endl;
+
+RBTree<int> tree3;
+tree3.Insert(5);
+tree3 = tree2;
+ 
 }
